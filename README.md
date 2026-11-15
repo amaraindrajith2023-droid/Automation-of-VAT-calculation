@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -14,3 +15,7 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+=======
+# Automation-of-VAT-calculation
+This project will help you to automate the VAT calculation and the final payment.
+>>>>>>> 8a5a41add1208b37b6bccedb501be3068b8d8b72
