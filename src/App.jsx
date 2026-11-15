@@ -26,6 +26,37 @@ function App() {
   const [transactionType, setTransactionType] = useState("Debit");
   const [vatApplicable, setVatApplicable] = useState("Yes");
 
+  const [transactions] = useState([
+    {
+      id: 1,
+      date: "2026-11-01",
+      description: "Microsoft Ireland",
+      transactionType: "Debit",
+      amount: 25,
+    },
+    {
+      id: 2,
+      date: "2026-11-03",
+      description: "Salary Payment",
+      transactionType: "Debit",
+      amount: 3500,
+    },
+    {
+      id: 3,
+      date: "2026-11-05",
+      description: "ABC Consulting Oy",
+      transactionType: "Debit",
+      amount: 500,
+    },
+    {
+      id: 4,
+      date: "2026-11-08",
+      description: "Customer Invoice Payment",
+      transactionType: "Credit",
+      amount: 1200,
+    },
+  ]);
+
   const addRule = () => {
     if (!keyword.trim()) {
       alert("Please enter a keyword");
@@ -50,10 +81,37 @@ function App() {
     setVatRules(vatRules.filter((rule) => rule.id !== id));
   };
 
+  const getSuggestion = (description, transactionType) => {
+    const rule = vatRules.find(
+      (rule) =>
+        description
+          .toLowerCase()
+          .includes(rule.keyword.toLowerCase()) &&
+        transactionType === rule.transactionType
+    );
+
+    return rule ? rule.vatApplicable : "Review Required";
+  };
+
+  const addTransactionAsRule = (transaction) => {
+    const newRule = {
+      id: Date.now(),
+      keyword: transaction.description,
+      transactionType: transaction.transactionType,
+      vatApplicable: "Yes",
+    };
+
+    setVatRules([...vatRules, newRule]);
+
+    alert(
+      `"${transaction.description}" added to VAT Rules table`
+    );
+  };
+
   return (
     <div
       style={{
-        maxWidth: "1100px",
+        maxWidth: "1200px",
         margin: "0 auto",
         padding: "40px",
         fontFamily: "Arial, sans-serif",
@@ -62,7 +120,7 @@ function App() {
       <h1>🚀 VATFlow AI</h1>
 
       <p>
-        VAT classification knowledge base and transaction matching engine.
+        VAT classification engine with rules-based transaction matching.
       </p>
 
       <hr />
@@ -71,7 +129,7 @@ function App() {
 
       <table
         border="1"
-        cellPadding="10"
+        cellPadding="8"
         style={{
           width: "100%",
           borderCollapse: "collapse",
@@ -94,92 +152,4 @@ function App() {
               <td>{rule.vatApplicable}</td>
               <td>
                 <button
-                  onClick={() => deleteRule(rule.id)}
-                  style={{
-                    backgroundColor: "#dc2626",
-                    color: "white",
-                    border: "none",
-                    padding: "6px 12px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <h2 style={{ marginTop: "40px" }}>Add New Rule</h2>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          flexWrap: "wrap",
-          marginBottom: "20px",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Keyword"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          style={{
-            padding: "10px",
-            minWidth: "250px",
-          }}
-        />
-
-        <select
-          value={transactionType}
-          onChange={(e) => setTransactionType(e.target.value)}
-          style={{
-            padding: "10px",
-          }}
-        >
-          <option>Debit</option>
-          <option>Credit</option>
-        </select>
-
-        <select
-          value={vatApplicable}
-          onChange={(e) => setVatApplicable(e.target.value)}
-          style={{
-            padding: "10px",
-          }}
-        >
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-
-        <button
-          onClick={addRule}
-          style={{
-            backgroundColor: "#2563eb",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Add Rule
-        </button>
-      </div>
-
-      <hr />
-
-      <h2>Next Development Phase</h2>
-
-      <p>
-        Upload bank transactions and automatically match them against these VAT
-        rules.
-      </p>
-    </div>
-  );
-}
-
-export default App;
+                  onClick=
