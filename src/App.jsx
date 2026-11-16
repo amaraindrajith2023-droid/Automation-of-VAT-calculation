@@ -22,10 +22,6 @@ function App() {
     },
   ]);
 
-  const [keyword, setKeyword] = useState("");
-  const [transactionType, setTransactionType] = useState("Debit");
-  const [vatApplicable, setVatApplicable] = useState("Yes");
-
   const [transactions] = useState([
     {
       id: 1,
@@ -48,20 +44,14 @@ function App() {
       transactionType: "Debit",
       amount: 500,
     },
-    {
-      id: 4,
-      date: "2026-11-08",
-      description: "Customer Invoice Payment",
-      transactionType: "Credit",
-      amount: 1200,
-    },
   ]);
 
+  const [keyword, setKeyword] = useState("");
+  const [transactionType, setTransactionType] = useState("Debit");
+  const [vatApplicable, setVatApplicable] = useState("Yes");
+
   const addRule = () => {
-    if (!keyword.trim()) {
-      alert("Please enter a keyword");
-      return;
-    }
+    if (!keyword.trim()) return;
 
     const newRule = {
       id: Date.now(),
@@ -81,31 +71,16 @@ function App() {
     setVatRules(vatRules.filter((rule) => rule.id !== id));
   };
 
-  const getSuggestion = (description, transactionType) => {
-    const rule = vatRules.find(
+  const getSuggestion = (description, type) => {
+    const match = vatRules.find(
       (rule) =>
         description
           .toLowerCase()
           .includes(rule.keyword.toLowerCase()) &&
-        transactionType === rule.transactionType
+        rule.transactionType === type
     );
 
-    return rule ? rule.vatApplicable : "Review Required";
-  };
-
-  const addTransactionAsRule = (transaction) => {
-    const newRule = {
-      id: Date.now(),
-      keyword: transaction.description,
-      transactionType: transaction.transactionType,
-      vatApplicable: "Yes",
-    };
-
-    setVatRules([...vatRules, newRule]);
-
-    alert(
-      `"${transaction.description}" added to VAT Rules table`
-    );
+    return match ? match.vatApplicable : "Review Required";
   };
 
   return (
@@ -152,4 +127,96 @@ function App() {
               <td>{rule.vatApplicable}</td>
               <td>
                 <button
-                  onClick=
+                  onClick={() => deleteRule(rule.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 style={{ marginTop: "30px" }}>
+        Add New Rule
+      </h3>
+
+      <div style={{ marginBottom: "30px" }}>
+        <input
+          type="text"
+          placeholder="Keyword"
+          value={keyword}
+          onChange={(e) =>
+            setKeyword(e.target.value)
+          }
+        />
+
+        <select
+          value={transactionType}
+          onChange={(e) =>
+            setTransactionType(e.target.value)
+          }
+        >
+          <option>Debit</option>
+          <option>Credit</option>
+        </select>
+
+        <select
+          value={vatApplicable}
+          onChange={(e) =>
+            setVatApplicable(e.target.value)
+          }
+        >
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+
+        <button onClick={addRule}>
+          Add Rule
+        </button>
+      </div>
+
+      <hr />
+
+      <h2>Transaction Matching Engine</h2>
+
+      <table
+        border="1"
+        cellPadding="8"
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+        }}
+      >
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Amount (€)</th>
+            <th>System Suggestion</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id}>
+              <td>{transaction.date}</td>
+              <td>{transaction.description}</td>
+              <td>{transaction.transactionType}</td>
+              <td>{transaction.amount}</td>
+              <td>
+                {getSuggestion(
+                  transaction.description,
+                  transaction.transactionType
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default App;
