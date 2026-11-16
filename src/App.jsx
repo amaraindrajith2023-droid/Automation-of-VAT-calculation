@@ -93,8 +93,32 @@ function App() {
     alert("Rule added successfully");
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+const formatDate = (dateValue) => {
+  if (!dateValue) return "";
+
+  try {
+    const parts = String(dateValue).split("/");
+
+    if (parts.length === 3) {
+      const month = parts[0].padStart(2, "0");
+      const day = parts[1].padStart(2, "0");
+
+      let year = parts[2];
+
+      if (year.length === 2) {
+        year = `20${year}`;
+      }
+
+      return `${day}/${month}/${year}`;
+    }
+
+    return dateValue;
+  } catch {
+    return dateValue;
+  }
+};
+
+const handleFileUpload = (event) => {    const file = event.target.files[0];
 
     if (!file) return;
 
@@ -111,34 +135,41 @@ function App() {
 
       const worksheet = workbook.Sheets[sheetName];
 
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+const jsonData = XLSX.utils.sheet_to_json(
+  worksheet,
+  {
+    raw: false,
+    defval: "",
+  }
+);
 
-      const formattedData = jsonData.map(
-        (row, index) => ({
-          id: index + 1,
 
-          bookingDate:
-            typeof row["Booking Date"] ===
-            "number"
-              ? XLSX.SSF.format(
-                  "dd/mm/yyyy",
-                  row["Booking Date"]
-                )
-              : row["Booking Date"] || "",
 
-          details: row["Details"] || "",
+console.log(jsonData);
 
-          transactionType:
-            row["Debit/Credit"] || "",
+const formattedData = jsonData.map(
+  (row, index) => ({
+    id: index + 1,
 
-          amount:
-            parseFloat(
-              String(row["Amount"])
-                .replace(/\s/g, "")
-                .replace(",", ".")
-            ) || 0,
-        })
-      );
+    bookingDate: formatDate(
+      row["Booking Date"]
+    ),
+
+    details: row["Details"] || "",
+
+    transactionType:
+      row["Debit/Credit"] || "",
+
+    amount:
+      parseFloat(
+        String(row["Amount"])
+          .replace("€", "")
+          .replace(",", ".")
+      ) || 0,
+
+    userDecision: "",
+  })
+);
 
       setTransactions(formattedData);
     };
@@ -156,6 +187,8 @@ function App() {
       }}
     >
       <h1>🚀 VATFlow AI</h1>
+
+      
 
       <p>
         Upload bank transactions and
