@@ -21,6 +21,24 @@ function App() {
       transactionType: "Debit",
       vatApplicable: "No",
     },
+    {
+      id: 4,
+      keyword: "Customer Invoice Payment",
+      transactionType: "Credit",
+      vatApplicable: "Yes",
+    },
+    {
+      id: 5,
+      keyword: "Office Depot",
+      transactionType: "Debit",
+      vatApplicable: "Yes",
+    },
+    {
+      id: 6,
+      keyword: "Google",
+      transactionType: "Debit",
+      vatApplicable: "Yes",
+    },
   ]);
 
   const [transactions, setTransactions] = useState([]);
@@ -67,7 +85,7 @@ function App() {
       id: Date.now(),
       keyword: transaction.details,
       transactionType: transaction.transactionType,
-      vatApplicable: transaction.userDecision || "Yes",
+      vatApplicable: "Yes",
     };
 
     setVatRules([...vatRules, newRule]);
@@ -91,23 +109,34 @@ function App() {
 
       const sheetName = workbook.SheetNames[0];
 
-      const worksheet =
-        workbook.Sheets[sheetName];
+      const worksheet = workbook.Sheets[sheetName];
 
-      const jsonData =
-        XLSX.utils.sheet_to_json(worksheet);
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
       const formattedData = jsonData.map(
         (row, index) => ({
           id: index + 1,
-          bookingDate: row["Booking Date"] || "",
+
+          bookingDate:
+            typeof row["Booking Date"] ===
+            "number"
+              ? XLSX.SSF.format(
+                  "dd/mm/yyyy",
+                  row["Booking Date"]
+                )
+              : row["Booking Date"] || "",
+
           details: row["Details"] || "",
+
           transactionType:
             row["Debit/Credit"] || "",
-          amount: Number(
-            row["Amount"] || 0
-          ),
-          userDecision: "",
+
+          amount:
+            parseFloat(
+              String(row["Amount"])
+                .replace(/\s/g, "")
+                .replace(",", ".")
+            ) || 0,
         })
       );
 
@@ -120,7 +149,7 @@ function App() {
   return (
     <div
       style={{
-        maxWidth: "1300px",
+        maxWidth: "1350px",
         margin: "0 auto",
         padding: "40px",
         fontFamily: "Arial, sans-serif",
@@ -168,8 +197,11 @@ function App() {
           {vatRules.map((rule) => (
             <tr key={rule.id}>
               <td>{rule.keyword}</td>
+
               <td>{rule.transactionType}</td>
+
               <td>{rule.vatApplicable}</td>
+
               <td>
                 <button
                   onClick={() =>
@@ -244,11 +276,19 @@ function App() {
         <thead>
           <tr>
             <th>Booking Date</th>
-            <th>Details</th>
+
+            <th style={{ width: "35%" }}>
+              Details
+            </th>
+
             <th>Debit/Credit</th>
+
             <th>Amount</th>
+
             <th>System Suggestion</th>
+
             <th>User Decision</th>
+
             <th>Action</th>
           </tr>
         </thead>
@@ -267,7 +307,12 @@ function App() {
                   {transaction.bookingDate}
                 </td>
 
-                <td>
+                <td
+                  style={{
+                    textAlign: "left",
+                    paddingLeft: "10px",
+                  }}
+                >
                   {transaction.details}
                 </td>
 
@@ -275,23 +320,28 @@ function App() {
                   {transaction.transactionType}
                 </td>
 
-                <td>
+                <td
+                  style={{
+                    textAlign: "right",
+                    fontWeight: "bold",
+                  }}
+                >
                   €
-                  {transaction.amount.toFixed(
-                    2
-                  )}
+                  {transaction.amount.toFixed(2)}
                 </td>
 
                 <td>{suggestion}</td>
 
                 <td>
-                  <select>
-                    <option>
+                  <select defaultValue="">
+                    <option value="">
                       Select
                     </option>
+
                     <option>
                       Yes
                     </option>
+
                     <option>
                       No
                     </option>
