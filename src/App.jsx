@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as XLSX from "xlsx";
 
 function App() {
   const [vatRules, setVatRules] = useState([
@@ -22,29 +23,7 @@ function App() {
     },
   ]);
 
-  const [transactions] = useState([
-    {
-      id: 1,
-      date: "2026-11-01",
-      description: "Microsoft Ireland",
-      transactionType: "Debit",
-      amount: 25,
-    },
-    {
-      id: 2,
-      date: "2026-11-03",
-      description: "Salary Payment",
-      transactionType: "Debit",
-      amount: 3500,
-    },
-    {
-      id: 3,
-      date: "2026-11-05",
-      description: "ABC Consulting Oy",
-      transactionType: "Debit",
-      amount: 500,
-    },
-  ]);
+  const [transactions, setTransactions] = useState([]);
 
   const [keyword, setKeyword] = useState("");
   const [transactionType, setTransactionType] = useState("Debit");
@@ -71,22 +50,77 @@ function App() {
     setVatRules(vatRules.filter((rule) => rule.id !== id));
   };
 
-  const getSuggestion = (description, type) => {
+  const getSuggestion = (description, transactionType) => {
     const match = vatRules.find(
       (rule) =>
         description
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(rule.keyword.toLowerCase()) &&
-        rule.transactionType === type
+        rule.transactionType === transactionType
     );
 
     return match ? match.vatApplicable : "Review Required";
   };
 
+  const addTransactionAsRule = (transaction) => {
+    const newRule = {
+      id: Date.now(),
+      keyword: transaction.details,
+      transactionType: transaction.transactionType,
+      vatApplicable: transaction.userDecision || "Yes",
+    };
+
+    setVatRules([...vatRules, newRule]);
+
+    alert("Rule added successfully");
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = e.target.result;
+
+      const workbook = XLSX.read(data, {
+        type: "array",
+      });
+
+      const sheetName = workbook.SheetNames[0];
+
+      const worksheet =
+        workbook.Sheets[sheetName];
+
+      const jsonData =
+        XLSX.utils.sheet_to_json(worksheet);
+
+      const formattedData = jsonData.map(
+        (row, index) => ({
+          id: index + 1,
+          bookingDate: row["Booking Date"] || "",
+          details: row["Details"] || "",
+          transactionType:
+            row["Debit/Credit"] || "",
+          amount: Number(
+            row["Amount"] || 0
+          ),
+          userDecision: "",
+        })
+      );
+
+      setTransactions(formattedData);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <div
       style={{
-        maxWidth: "1200px",
+        maxWidth: "1300px",
         margin: "0 auto",
         padding: "40px",
         fontFamily: "Arial, sans-serif",
@@ -95,8 +129,19 @@ function App() {
       <h1>🚀 VATFlow AI</h1>
 
       <p>
-        VAT classification engine with rules-based transaction matching.
+        Upload bank transactions and
+        automatically classify VAT.
       </p>
+
+      <hr />
+
+      <h2>Upload Bank Statement</h2>
+
+      <input
+        type="file"
+        accept=".xlsx,.xls"
+        onChange={handleFileUpload}
+      />
 
       <hr />
 
@@ -113,8 +158,8 @@ function App() {
         <thead>
           <tr>
             <th>Keyword</th>
-            <th>Transaction Type</th>
-            <th>VAT Applicable</th>
+            <th>Type</th>
+            <th>VAT</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -127,7 +172,9 @@ function App() {
               <td>{rule.vatApplicable}</td>
               <td>
                 <button
-                  onClick={() => deleteRule(rule.id)}
+                  onClick={() =>
+                    deleteRule(rule.id)
+                  }
                 >
                   Delete
                 </button>
@@ -137,11 +184,17 @@ function App() {
         </tbody>
       </table>
 
-      <h3 style={{ marginTop: "30px" }}>
+      <h3 style={{ marginTop: "25px" }}>
         Add New Rule
       </h3>
 
-      <div style={{ marginBottom: "30px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          marginBottom: "30px",
+        }}
+      >
         <input
           type="text"
           placeholder="Keyword"
@@ -178,7 +231,7 @@ function App() {
 
       <hr />
 
-      <h2>Transaction Matching Engine</h2>
+      <h2>Imported Transactions</h2>
 
       <table
         border="1"
@@ -190,29 +243,78 @@ function App() {
       >
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Amount (€)</th>
+            <th>Booking Date</th>
+            <th>Details</th>
+            <th>Debit/Credit</th>
+            <th>Amount</th>
             <th>System Suggestion</th>
+            <th>User Decision</th>
+            <th>Action</th>
           </tr>
         </thead>
 
         <tbody>
-          {transactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <td>{transaction.date}</td>
-              <td>{transaction.description}</td>
-              <td>{transaction.transactionType}</td>
-              <td>{transaction.amount}</td>
-              <td>
-                {getSuggestion(
-                  transaction.description,
-                  transaction.transactionType
-                )}
-              </td>
-            </tr>
-          ))}
+          {transactions.map((transaction) => {
+            const suggestion =
+              getSuggestion(
+                transaction.details,
+                transaction.transactionType
+              );
+
+            return (
+              <tr key={transaction.id}>
+                <td>
+                  {transaction.bookingDate}
+                </td>
+
+                <td>
+                  {transaction.details}
+                </td>
+
+                <td>
+                  {transaction.transactionType}
+                </td>
+
+                <td>
+                  €
+                  {transaction.amount.toFixed(
+                    2
+                  )}
+                </td>
+
+                <td>{suggestion}</td>
+
+                <td>
+                  <select>
+                    <option>
+                      Select
+                    </option>
+                    <option>
+                      Yes
+                    </option>
+                    <option>
+                      No
+                    </option>
+                  </select>
+                </td>
+
+                <td>
+                  {suggestion ===
+                    "Review Required" && (
+                    <button
+                      onClick={() =>
+                        addTransactionAsRule(
+                          transaction
+                        )
+                      }
+                    >
+                      Add As Rule
+                    </button>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
