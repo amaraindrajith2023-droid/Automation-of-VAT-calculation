@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "automation-of-vat-calculation",
+  "compatibility_date": "2026-11-16",
+
+  "d1_databases": [
+    {
+      "binding": "vatflow_db",
+      "database_name": "vatflow-db",
+      "database_id": "45f5af2f-5ea2-4914-9c8a-4a6a9a9f6032"
+    }
+  ]
+}
