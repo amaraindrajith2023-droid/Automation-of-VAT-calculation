@@ -911,7 +911,7 @@ ${error.message}`
           flexWrap: "wrap",
         }}
       >
-        <h1>🚀 VATFlow AI</h1>
+        <h1>🚀 VATFlow AI v1.0</h1>
         {companyInfo.companyName && (
           <div style={{ color: "#555", fontWeight: "bold" }}>
             🏢 {companyInfo.companyName}
