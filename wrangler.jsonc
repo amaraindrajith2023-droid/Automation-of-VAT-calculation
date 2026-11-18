@@ -1,7 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+
   "name": "automation-of-vat-calculation",
+
   "compatibility_date": "2026-11-16",
+
+  "pages_build_output_dir": "dist",
 
   "d1_databases": [
     {

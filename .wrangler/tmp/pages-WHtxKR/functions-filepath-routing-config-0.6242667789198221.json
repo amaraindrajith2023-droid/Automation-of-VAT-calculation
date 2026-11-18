@@ -1,0 +1,45 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/archive-transactions",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/archive-transactions.js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/historical_transactions",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/historical_transactions.js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/rules",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/rules.js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/transactions",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/transactions.js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/vatreturns",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/vatreturns.js:onRequest"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
