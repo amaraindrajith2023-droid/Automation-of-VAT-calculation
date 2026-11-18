@@ -707,11 +707,29 @@ function App() {
   }));
 
   const cardStyle = {
-    padding: "15px",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    minWidth: "180px",
+    padding: "24px",
+    border: "1px solid #e0e0e0",
+    borderRadius: "16px",
+    minWidth: "260px",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 3px 12px rgba(0,0,0,0.08)",
+    transition: "0.2s ease",
   };
+
+  const navButtonStyle = {
+    padding: "12px 22px",
+    borderRadius: "10px",
+    border: "1px solid #1976d2",
+    backgroundColor: "#ffffff",
+    fontWeight: "600",
+    cursor: "pointer",
+  };
+
+  const getNavButtonStyle = (page) => ({
+    ...navButtonStyle,
+    backgroundColor: activePage === page ? "#1976d2" : "#ffffff",
+    color: activePage === page ? "#ffffff" : "#000000",
+  });
 
   const settingsSectionStyle = {
     padding: "20px",
@@ -897,9 +915,9 @@ ${error.message}`
   return (
     <div
       style={{
-        maxWidth: "1400px",
+        maxWidth: "1800px",
         margin: "0 auto",
-        padding: "40px",
+        padding: "30px 40px",
         fontFamily: "Arial, sans-serif",
       }}
     >
@@ -923,25 +941,54 @@ ${error.message}`
       <div
         style={{
           display: "flex",
-          gap: "10px",
+          gap: "15px",
+          flexWrap: "wrap",
           marginBottom: "25px",
           borderBottom: "1px solid #ccc",
           paddingBottom: "15px",
         }}
       >
-        <button onClick={() => setActivePage("home")}>🏠 Home</button>
+        <button
+          onClick={() => setActivePage("home")}
+          style={getNavButtonStyle("home")}
+        >
+          🏠 Home
+        </button>
 
-        <button onClick={() => setActivePage("entry")}>➕ New Entry</button>
+        <button
+          onClick={() => setActivePage("entry")}
+          style={getNavButtonStyle("entry")}
+        >
+          ➕ New Entry
+        </button>
 
-        <button onClick={() => setActivePage("history")}>📜 History</button>
+        <button
+          onClick={() => setActivePage("history")}
+          style={getNavButtonStyle("history")}
+        >
+          📜 History
+        </button>
 
-        <button onClick={() => setActivePage("insights")}>
+        <button
+          onClick={() => setActivePage("insights")}
+          style={getNavButtonStyle("insights")}
+        >
           📊 Business Insights
         </button>
 
-        <button onClick={() => setActivePage("ai")}>🤖 AI Assistant</button>
+        <button
+          onClick={() => setActivePage("ai")}
+          style={getNavButtonStyle("ai")}
+        >
+          🤖 AI Assistant
+        </button>
 
-        <button onClick={() => setActivePage("settings")}>⚙️ Settings</button>
+        <button
+          onClick={() => setActivePage("settings")}
+          style={getNavButtonStyle("settings")}
+        >
+          ⚙️ Settings
+        </button>
       </div>
 
       {activePage === "home" && (
@@ -951,8 +998,16 @@ ${error.message}`
               marginBottom: "30px",
             }}
           >
-            <h1>Dashboard</h1>
-            <p>Business overview and VAT performance metrics.</p>
+            <h1>Executive Dashboard</h1>
+            <p
+              style={{
+                color: "#666",
+                fontSize: "16px",
+              }}
+            >
+              Monitor VAT compliance, transaction activity, filing status and
+              key business performance metrics.
+            </p>
           </div>
 
           {/* ROW 1: OPERATIONAL KPIs */}
@@ -966,27 +1021,27 @@ ${error.message}`
             }}
           >
             <div style={cardStyle}>
-              <h3>Total Transactions</h3>
+              <h3>Transactions Processed</h3>
               <h2>{totalTransactions}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>Auto Matched</h3>
+              <h3>Automatically Classified</h3>
               <h2>{autoMatched}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>Review Required</h3>
+              <h3>Pending Review</h3>
               <h2>{reviewRequired}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>VAT Applicable</h3>
+              <h3>VAT Eligible</h3>
               <h2>{vatApplicableCount}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>VAT Not Applicable</h3>
+              <h3>Non-VAT Transactions</h3>
               <h2>{vatNotApplicableCount}</h2>
             </div>
           </div>
@@ -1001,17 +1056,17 @@ ${error.message}`
             }}
           >
             <div style={cardStyle}>
-              <h3>Input VAT</h3>
+              <h3>Recoverable VAT Input</h3>
               <h2>€{inputVAT.toFixed(2)}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>Output VAT</h3>
+              <h3>Collected VAT Output</h3>
               <h2>€{outputVAT.toFixed(2)}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>VAT Due To VERO</h3>
+              <h3>Net VAT Liability</h3>
               <h2>€{vatPayable.toFixed(2)}</h2>
             </div>
 
@@ -1036,12 +1091,12 @@ ${error.message}`
             }}
           >
             <div style={cardStyle}>
-              <h3>📁 Archived Transactions</h3>
+              <h3>📁 Archived Records</h3>
               <h2>{totalArchivedTransactions}</h2>
             </div>
 
             <div style={cardStyle}>
-              <h3>🧾 VAT Returns Filed</h3>
+              <h3>🧾 Filed VAT Returns</h3>
               <h2>{totalVatReturnsFiled}</h2>
             </div>
 
@@ -1071,7 +1126,7 @@ ${error.message}`
             </div>
 
             <div style={cardStyle}>
-              <h3>{isSystemHealthy ? "🟢" : "🟡"} System Status</h3>
+              <h3>{isSystemHealthy ? "🟢" : "🟡"} Platform Health</h3>
               <h2
                 style={{
                   color: isSystemHealthy ? "#2e7d32" : "#ed6c02",
@@ -1087,7 +1142,7 @@ ${error.message}`
             </div>
 
             <div style={cardStyle}>
-              <h3>⚙️ VAT Rules</h3>
+              <h3>⚙️ Classification Rules</h3>
               <h2>{totalRules}</h2>
             </div>
           </div>
@@ -1096,188 +1151,244 @@ ${error.message}`
 
       {activePage === "entry" && (
         <>
-          <h1>➕ New VAT Entry</h1>
+          <h1>VAT Processing Centre</h1>
+          <p
+            style={{
+              color: "#666",
+              marginBottom: "20px",
+            }}
+          >
+            Import transactions, review VAT classifications, and prepare VAT
+            returns.
+          </p>
 
           <hr />
 
           <section>
-            <h2>Upload Bank Statement</h2>
-            <p>Upload bank transactions and automatically classify VAT.</p>
+            <h2>Transaction Import</h2>
+            <p>
+              Import transaction data from a bank statement for VAT analysis and
+              classification.
+            </p>
             <input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
-          </section>
 
-          <hr />
-
-          <section>
-            <h2>Imported Transactions</h2>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginBottom: "20px",
-                flexWrap: "wrap",
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Search description"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-              />
-
-              <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-              >
-                <option>All</option>
-                <option>Debit</option>
-                <option>Credit</option>
-              </select>
-
-              <select
-                value={vatFilter}
-                onChange={(e) => setVatFilter(e.target.value)}
-              >
-                <option>All</option>
-                <option>Yes</option>
-                <option>No</option>
-                <option>Review Required</option>
-              </select>
-            </div>
-
-            <table
-              border="1"
-              cellPadding="8"
-              style={{ width: "100%", borderCollapse: "collapse" }}
-            >
-              <thead>
-                <tr>
-                  <th>Booking Date</th>
-                  <th style={{ width: "35%" }}>Details</th>
-                  <th>Debit/Credit</th>
-                  <th>Amount</th>
-                  <th>System Suggestion</th>
-                  <th>User Decision</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredTransactions.map((transaction) => {
-                  const suggestion = getSuggestion(
-                    transaction.details,
-                    transaction.transactionType
-                  );
-
-                  return (
-                    <tr key={transaction.id}>
-                      <td>{transaction.bookingDate}</td>
-
-                      <td style={{ textAlign: "left", paddingLeft: "10px" }}>
-                        {transaction.details}
-                      </td>
-
-                      <td>{transaction.transactionType}</td>
-
-                      <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                        €{Number(transaction.amount).toFixed(2)}
-                      </td>
-
-                      <td>{suggestion}</td>
-
-                      <td>
-                        <select
-                          value={transaction.userDecision}
-                          onChange={(e) =>
-                            updateUserDecision(transaction.id, e.target.value)
-                          }
-                        >
-                          <option value="">Select</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                        </select>
-                      </td>
-
-                      <td>
-                        {suggestion === "Review Required" ? (
-                          <button
-                            onClick={() => addTransactionAsRule(transaction)}
-                          >
-                            Add As Rule
-                          </button>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </section>
-
-          <hr />
-
-          <section>
-            <h2>VAT Return Summary</h2>
-            <div
-              style={{
-                padding: "20px",
-                border: "2px solid #1976d2",
-                borderRadius: "10px",
-                backgroundColor: "#f5f9ff",
-                marginBottom: "30px",
-              }}
-            >
-              <p>VAT Rate: {vatRate}%</p>
-              <div style={{ marginBottom: "15px" }}>
-                <label>VAT Period: </label>
-
-                <input
-                  type="month"
-                  value={vatPeriod}
-                  onChange={(e) => setVatPeriod(e.target.value)}
-                />
-              </div>
-
-              <p>
-                Transactions Status:
-                {transactionsConfirmed
-                  ? " ✅ Confirmed"
-                  : " ⏳ Awaiting Confirmation"}
-              </p>
-
-              <p>Input VAT: €{inputVAT.toFixed(2)}</p>
-              <p>Output VAT: €{outputVAT.toFixed(2)}</p>
-
-              <h2>VAT Due To VERO: €{vatPayable.toFixed(2)}</h2>
-
-              <button
-                onClick={() => {
-                  if (reviewRequired > 0) {
-                    alert(
-                      `There are still ${reviewRequired} transactions requiring review.`
-                    );
-                    return;
-                  }
-
-                  setTransactionsConfirmed(true);
+            {transactions.length === 0 && (
+              <div
+                style={{
+                  marginTop: "20px",
+                  padding: "20px",
+                  border: "1px dashed #ccc",
+                  borderRadius: "10px",
+                  backgroundColor: "#fafafa",
                 }}
-                style={{ marginRight: "10px", padding: "10px 20px" }}
               >
-                Confirm Transactions
-              </button>
-
-              <button
-                onClick={confirmVatReturn}
-                disabled={!transactionsConfirmed}
-                style={{ padding: "10px 20px" }}
-              >
-                Confirm VAT Return
-              </button>
-            </div>
+                <h3>No Transactions Imported</h3>
+                <p>
+                  Upload an Excel bank statement to begin VAT processing.
+                </p>
+              </div>
+            )}
           </section>
+
+          {transactions.length > 0 && (
+            <>
+              <hr />
+
+              <section>
+                <h2>Transaction Review &amp; Classification</h2>
+
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    marginBottom: "20px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <input
+                    type="text"
+                    placeholder="Search description"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                  />
+
+                  <select
+                    value={typeFilter}
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                  >
+                    <option>All</option>
+                    <option>Debit</option>
+                    <option>Credit</option>
+                  </select>
+
+                  <select
+                    value={vatFilter}
+                    onChange={(e) => setVatFilter(e.target.value)}
+                  >
+                    <option>All</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    <option>Review Required</option>
+                  </select>
+                </div>
+
+                <table
+                  border="1"
+                  cellPadding="8"
+                  style={{ width: "100%", borderCollapse: "collapse" }}
+                >
+                  <thead>
+                    <tr>
+                      <th>Booking Date</th>
+                      <th style={{ width: "35%" }}>Details</th>
+                      <th>Debit/Credit</th>
+                      <th>Amount</th>
+                      <th>System Suggestion</th>
+                      <th>User Decision</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {filteredTransactions.map((transaction) => {
+                      const suggestion = getSuggestion(
+                        transaction.details,
+                        transaction.transactionType
+                      );
+
+                      return (
+                        <tr key={transaction.id}>
+                          <td>{transaction.bookingDate}</td>
+
+                          <td style={{ textAlign: "left", paddingLeft: "10px" }}>
+                            {transaction.details}
+                          </td>
+
+                          <td>{transaction.transactionType}</td>
+
+                          <td style={{ textAlign: "right", fontWeight: "bold" }}>
+                            €{Number(transaction.amount).toFixed(2)}
+                          </td>
+
+                          <td>{suggestion}</td>
+
+                          <td>
+                            <select
+                              value={transaction.userDecision}
+                              onChange={(e) =>
+                                updateUserDecision(
+                                  transaction.id,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="">Select</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </td>
+
+                          <td>
+                            {suggestion === "Review Required" ? (
+                              <button
+                                onClick={() =>
+                                  addTransactionAsRule(transaction)
+                                }
+                              >
+                                Add As Rule
+                              </button>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </section>
+
+              <hr />
+
+              <section>
+                <h2>VAT Filing Summary</h2>
+                <div
+                  style={{
+                    padding: "20px",
+                    border: "2px solid #1976d2",
+                    borderRadius: "10px",
+                    backgroundColor: "#f5f9ff",
+                    marginBottom: "30px",
+                  }}
+                >
+                  <p>VAT Rate: {vatRate}%</p>
+                  <div style={{ marginBottom: "15px" }}>
+                    <label>VAT Period: </label>
+
+                    <input
+                      type="month"
+                      value={vatPeriod}
+                      onChange={(e) => setVatPeriod(e.target.value)}
+                    />
+                  </div>
+
+                  <p>
+                    Transactions Status:
+                    {transactionsConfirmed
+                      ? " ✅ Confirmed"
+                      : " ⏳ Awaiting Confirmation"}
+                  </p>
+
+                  <p>Recoverable VAT Input: €{inputVAT.toFixed(2)}</p>
+                  <p>Collected VAT Output: €{outputVAT.toFixed(2)}</p>
+
+                  <h2>Net VAT Liability: €{vatPayable.toFixed(2)}</h2>
+
+                  <button
+                    onClick={() => {
+                      if (reviewRequired > 0) {
+                        alert(
+                          `There are still ${reviewRequired} transactions requiring review.`
+                        );
+                        return;
+                      }
+
+                      setTransactionsConfirmed(true);
+                    }}
+                    style={{
+                      backgroundColor: "#2e7d32",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "12px 20px",
+                      fontWeight: "bold",
+                      marginRight: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Validate Transactions
+                  </button>
+
+                  <button
+                    onClick={confirmVatReturn}
+                    disabled={!transactionsConfirmed}
+                    style={{
+                      backgroundColor: "#1976d2",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "12px 20px",
+                      fontWeight: "bold",
+                      cursor: transactionsConfirmed ? "pointer" : "not-allowed",
+                      opacity: transactionsConfirmed ? 1 : 0.6,
+                    }}
+                  >
+                    Submit VAT Return
+                  </button>
+                </div>
+              </section>
+            </>
+          )}
         </>
       )}
 
@@ -1297,9 +1408,9 @@ ${error.message}`
             <thead>
               <tr>
                 <th>VAT Period</th>
-                <th>Input VAT</th>
-                <th>Output VAT</th>
-                <th>VAT Due</th>
+                <th>Recoverable VAT Input</th>
+                <th>Collected VAT Output</th>
+                <th>Net VAT Liability</th>
                 <th>Filed Date</th>
               </tr>
             </thead>
@@ -1316,7 +1427,7 @@ ${error.message}`
             </tbody>
           </table>
 
-          <h2>📁 Archived Transactions</h2>
+          <h2>📁 Archived Records</h2>
 
           <div
             style={{
@@ -1398,8 +1509,7 @@ ${error.message}`
           </div>
 
           <p>
-            Total Archived Transactions:{" "}
-            {filteredHistoricalTransactions.length}
+            Total Archived Records: {filteredHistoricalTransactions.length}
           </p>
 
           {filteredHistoricalTransactions.length === 0 && (
@@ -1454,7 +1564,15 @@ ${error.message}`
 
       {activePage === "insights" && (
         <>
-          <h2>📊 Business Insights</h2>
+          <h1>Business Intelligence Dashboard</h1>
+          <p
+            style={{
+              color: "#666",
+            }}
+          >
+            Visual analysis of VAT trends, financial activity and supplier
+            concentration.
+          </p>
 
           <div
             style={{
@@ -1533,11 +1651,11 @@ ${error.message}`
 
       {activePage === "ai" && (
         <>
-          <h2>🤖 VATFlow AI Assistant</h2>
+          <h1>VAT Intelligence Assistant</h1>
 
           <p>
-            Ask questions about VAT returns, suppliers, customers and archived
-            data.
+            Ask questions about VAT returns, transactions, suppliers, customers
+            and business metrics.
           </p>
 
           <textarea
@@ -1742,7 +1860,7 @@ ${error.message}`
 
           {/* VAT RULES MASTER TABLE */}
           <div style={settingsSectionStyle}>
-            <h3>📋 VAT Rules Master Table</h3>
+            <h3>📋 Classification Rules Master Table</h3>
 
             <table
               border="1"
@@ -1830,25 +1948,25 @@ ${error.message}`
               <tbody>
                 <tr>
                   <td>
-                    <strong>Transactions Imported</strong>
+                    <strong>Transactions Processed</strong>
                   </td>
                   <td>{totalTransactions}</td>
                 </tr>
                 <tr>
                   <td>
-                    <strong>Archived Transactions</strong>
+                    <strong>Archived Records</strong>
                   </td>
                   <td>{totalArchivedTransactions}</td>
                 </tr>
                 <tr>
                   <td>
-                    <strong>VAT Returns</strong>
+                    <strong>Filed VAT Returns</strong>
                   </td>
                   <td>{totalVatReturnsFiled}</td>
                 </tr>
                 <tr>
                   <td>
-                    <strong>VAT Rules</strong>
+                    <strong>Classification Rules</strong>
                   </td>
                   <td>{totalRules}</td>
                 </tr>
